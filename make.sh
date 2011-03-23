@@ -1,2 +1,2 @@
 #!/bin/bash
-drush si
+yes | /opt/drush/drush si
