@@ -1,2 +1,2 @@
 #!/bin/bash
-yes | /opt/drush/drush si
+no | /opt/drush/drush si --db-url=mysql://bostonrising:PCIBoston2@localhost:3306/BostonRising
