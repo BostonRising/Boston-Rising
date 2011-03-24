@@ -193,6 +193,19 @@ $databases = array (
       'prefix' => '',
     ),
   ),
+'bamboo' =>
+  array (
+    'bamboo' =>
+    array (
+      'database' => 'BostonRising',
+      'username' => 'bostonrising',
+      'password' => 'PCIBoston2',
+      'host' => 'localhost',
+      'port' => '3306',
+      'driver' => 'mysql',
+      'prefix' => '',
+    ),
+  ),
 );
 
 
