@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ *
+ * The main autoassignrole.module file
+ *
+ * Designate a role to assign all new users to in addition to providing a
+ * mechanism for new users to select a role or role for their account.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function autoassignrole_permission() {
+  return array(
+    'administer autoassignrole' =>  array(
+      'title' => t('Administer auto assign role'),
+      'description' => t('Perform administration tasks for auto assign role.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
+function autoassignrole_menu() {
+  $items = array();
+  $items['admin/config/autoassignrole'] = array(
+    'title' => 'Auto assign role',
+    'description' => 'Configure auto role assignment.',
+    'access arguments' => array('administer autoassignrole'),
+    'page callback' => 'autoassignrole_admin_block_page',
+    'file' => 'autoassignrole.admin.inc',
+  );
+  $items['admin/config/autoassignrole/auto'] = array(
+    'title' => 'Auto role assignment',
+    'description' => 'Configure which role(s) are automatically assigned on user creation.',
+    'access arguments' => array('administer autoassignrole'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('autoassignrole_auto_settings'),
+    'file' => 'autoassignrole.admin.inc',
+  );
+  $items['admin/config/autoassignrole/user'] = array(
+    'title' => 'Allow user to choose',
+    'description' => 'Configure the ability for an end user to choose their own roles.',
+    'access arguments' => array('administer autoassignrole'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('autoassignrole_user_settings'),
+    'file' => 'autoassignrole.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_user_presave().
+ */
+function autoassignrole_user_presave(&$edit, $account, $category) {
+  // Use case http://drupal.org/node/971622
+  // Make sure we only assign roles automatically when enabled to do so.
+  if (variable_get('autoassignrole_auto_active', 0)) {
+
+    // Use case http://drupal.org/node/944864
+    // Only assign roles if this is a new account.
+    if (isset ($account->is_new) && !empty($account->is_new)) {
+      // Get the existing user roles with the exception of the anonymous role.
+      $user_roles = user_roles(TRUE);
+      $auto_roles = variable_get('autoassignrole_auto_roles', array());
+      // Add autoassignrole_auto_roles to the $edit['roles'] array if they are
+      // valid.
+      foreach ($auto_roles as $rid) {
+        // Dealing with checkbox values so anything greater than zero is valid
+        if (!empty($rid) && array_key_exists($rid, $user_roles)) {
+          $edit['roles'][$rid] = $user_roles[$rid];
+        }
+      }
+    }
+  }
+}
