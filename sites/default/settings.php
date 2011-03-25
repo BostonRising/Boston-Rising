@@ -183,11 +183,10 @@ $databases = array (
   array (
     'default' => 
     array (
-      'database' => 'bitnami_drupal7',
-      'username' => 'bitnami',
-      'password' => '6de7b3e23f',
-      'host' => 'localhost',
-      'unix_socket' => '/opt/bitnami/mysql/tmp/mysql.sock',
+      'database' => 'BostonRising',
+      'username' => 'bostonrising',
+      'password' => 'PCIBoston2',
+      'host' => 'bostonrisingdev.clfimzsuh92i.us-east-1.rds.amazonaws.com',
       'port' => '3306',
       'driver' => 'mysql',
       'prefix' => '',
